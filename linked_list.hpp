@@ -1,86 +1,46 @@
 #ifndef LINKED_LIST_HPP_
 #define LINKED_LIST_HPP_
 
+#include <cassert>
+#include <sstream>
+
 namespace dsc {
 template <typename T>
 class LinkedList {
  public:
+  // ctors and dtors
   LinkedList() = default;  // empty list constructor
-  LinkedList(const LinkedList& original) {
-    copy_from(original);
-  }  // copy constructor
-  LinkedList(LinkedList&& other) : head_{other.head_}, tail_{other.tail_} {
-    other.head_ = nullptr;
-    other.tail_ = nullptr;
-  }  // move constructor
-  LinkedList& operator=(const LinkedList& original) {
-    if (this != &original) {
-      destroy();
-      copy_from(original);
-    }
-
-    return *this;
-  }  // copy assignment
-
-  LinkedList& operator=(LinkedList&& other) {
-    if (this != &other) {
-      destroy();
-
-      head_ = other.head_;
-      tail = other.tail_;
-
-      other.head_ = nullptr;
-      other.tail_ = nullptr;
-    }
-    return *this;
-  }  // move assignment
-
+  LinkedList(const LinkedList& original);
+  LinkedList(LinkedList&& other);
+  LinkedList& operator=(const LinkedList& original);
+  LinkedList& operator=(LinkedList&& other);
   ~LinkedList() { destroy(); }  // destructor
 
+  // overloads
   bool operator==(const LinkedList& rhs) const {
-    return source_ == other.source_;
+    return source_ == rhs.source_;  // adding lhs argument is invalid
+                                    // so how is this done?
   }
-
   bool operator!=(const LinkedList& rhs) const { return !(*this == rhs); }
 
   // member functions
   void clear();
-  std::size_t size() const {
-    int counter = 0;
-    for (Node* currnent = head_; current != nullptr; current = current->next) {
-      ++counter;
-    }
-    return counter;
-  }
-  bool empty() const { return head == nullptr; }
-  T& at(std::size_t index) {
-    Node* target = node_at(index);
-    if (target == nullptr) {
-      throw std::out_of_range("index out of list bounds");  // TODO sstream ver
-    }
-
-    return target->value;
-  }
-  const T& at(std::size_t index) const {
-    Node* target = node_at(index);
-    if (target == nullptr) {
-      throw std::out_of_range("index out of list bounds");  // TODO sstream ver
-    }
-
-    return target->value;
-  }
-  void push_front(int value) {
+  std::size_t size() const;
+  bool empty() const { return head_ == nullptr && tail_ == nullptr; }
+  T& at(std::size_t index);
+  const T& at(std::size_t index) const;
+  void push_front(T value) {
     Node* new_head = new Node{value, head_, nullptr};
 
     if (head_ != nullptr) {
       head_->previous = new_head;
     }
-    tail_ = new_tail;
+    tail_ = new_head;
     if (empty()) {
       head_ = tail_;
     }
   }
-  void push_back(int value) {
+  void push_back(T value) {
     Node* new_tail = new Node{value, nullptr, tail_};
 
     if (tail_ != nullptr) {
@@ -94,7 +54,7 @@ class LinkedList {
   T pop_front() {
     if (empty()) {
       return;
-    }  // best practice here?
+    }  // best practice on what to return here?
 
     Node* popped_node = head_;
     T tmp = popped_node->value;
@@ -178,7 +138,6 @@ class LinkedList {
   void resize(std::size_t newsize);
 
  private:
-  template <typename T>
   struct Node {
     T value;
     Node* next;
@@ -202,6 +161,82 @@ class LinkedList {
   Node* head_{};
   Node* tail_{};
 };
+
+template <typename T>
+LinkedList<T>::LinkedList(const LinkedList& original) {
+  copy_from(original);
+}  // copy constructor
+
+template <typename T>
+LinkedList<T>::LinkedList(LinkedList&& other)
+    : head_{other.head_}, tail_{other.tail_} {
+  other.head_ = nullptr;
+  other.tail_ = nullptr;
+}  // move constructor
+
+template <typename T>
+LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T>& original) {
+  if (this != &original) {
+    destroy();
+    copy_from(original);
+  }
+
+  return *this;
+}  // copy assignment
+
+template <typename T>
+LinkedList<T>& LinkedList<T>::operator=(LinkedList<T>&& other) {
+  if (this != &other) {
+    destroy();
+
+    head_ = other.head_;
+    tail_ = other.tail_;
+
+    other.head_ = nullptr;
+    other.tail_ = nullptr;
+  }
+  return *this;
+}  // move assignment
+
+template <typename T>
+std::size_t LinkedList<T>::size() const {
+  int counter = 0;
+  for (Node* current = head_; current != nullptr; current = current->next) {
+    ++counter;
+  }
+  return counter;
+}  // counts size of list
+
+template <typename T>
+T& LinkedList<T>::at(std::size_t index) {
+  Node* target = node_at(index);
+  if (target == nullptr) {
+    throw std::out_of_range("OOB");
+    // std::ostringstream msg;
+    // msg << "Index " + index + " out of bounds in array of size " + size();
+    // maybe add size_ data member and update member functions to adjust?
+    // throw std::out_of_range(std::string result =
+    //                            msg.str(););  // TODO sstream ver
+  }
+
+  return target->value;
+}
+
+template <typename T>
+const T& LinkedList<T>::at(std::size_t index) const {
+  Node* target = node_at(index);
+  if (target == nullptr) {
+    throw std::out_of_range("OOB");
+    // std::ostringstream msg;
+    // msg << "Index " + index + " out of bounds in array of size " + size();
+    // maybe add size_ data member and update member functions to adjust?
+    // throw std::out_of_range(std::string result =
+    //                            msg.str(););  // TODO sstream ver
+  }
+
+  return target->value;
+}
+
 }  // namespace dsc
 #endif
 
@@ -219,4 +254,4 @@ class LinkedList {
    private:
     dsc::LinkedList::Node* source_{};
   };
-  /*
+  */
