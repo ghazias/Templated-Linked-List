@@ -24,8 +24,7 @@ TEST_CASE("Copy constructor is deep copy") {
  }
 
  TEST_CASE("Copy constructor copies correct values") {
-  dsc::LinkedList<int>  
-
+   //TODO fill test
  }
 
 TEST_CASE("Move constructor, Nonempty to empty") {

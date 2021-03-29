@@ -246,8 +246,8 @@ bool LinkedList<T>::contains(T value) const {
     return false;
   }
 
-template <typename T>
-  Node* LinkedList<T>::node_at(std::size_t index) const {
+  template <typename T>
+  typename LinkedList<T>::Node* LinkedList<T>::node_at(std::size_t index) const {
     Node* current = head_;
 
     for (std::size_t counter; counter < index; ++counter) {
@@ -263,7 +263,7 @@ template <typename T>
 template <typename T>
 void LinkedList<T>::copy_from(const LinkedList& original) {
 	for (Node* current = original.head_; current != nullptr; current = current->next) {
-		append_back(current->value);
+		push_back(current->value);
 	}
 }
 
