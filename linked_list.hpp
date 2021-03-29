@@ -17,10 +17,7 @@ class LinkedList {
   ~LinkedList() { destroy(); }  // destructor
 
   // overloads
-  bool operator==(const LinkedList& rhs) const {
-    return source_ == rhs.source_;  // adding lhs argument is invalid
-                                    // so how is this done?
-  }
+  bool operator==(const LinkedList& rhs) const;
   bool operator!=(const LinkedList& rhs) const { return !(*this == rhs); }
 
   // member functions
@@ -89,6 +86,22 @@ LinkedList<T>& LinkedList<T>::operator=(LinkedList<T>&& other) {
 }  // move assignment
 
 template <typename T>
+  bool LinkedList<T>::operator==(const LinkedList& rhs) const {
+    for (Node *lhs_current = head_, rhs_current = rhs.head_;
+         lhs_current != nullptr;
+         lhs_current = lhs_current->next, rhs_current = rhs_current->next) {
+      if (rhs_current == nullptr) {
+        return false;
+      }
+
+      if (lhs_current->value != rhs_current->value) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+template <typename T>
 std::size_t LinkedList<T>::size() const {
   int counter = 0;
   for (Node* current = head_; current != nullptr; current = current->next) {
@@ -128,143 +141,144 @@ const T& LinkedList<T>::at(std::size_t index) const {
 }
 
 template <typename T>
-  void LinkedList<T>::push_front(T value) {
-    Node* new_head = new Node{value, head_, nullptr};
+void LinkedList<T>::push_front(T value) {
+  Node* new_head = new Node{value, head_, nullptr};
 
-    if (head_ != nullptr) {
-      head_->previous = new_head;
-    }
-    tail_ = new_head;
-    if (empty()) {
-      head_ = tail_;
-    }
+  if (head_ != nullptr) {
+    head_->previous = new_head;
   }
+  tail_ = new_head;
+  if (empty()) {
+    head_ = tail_;
+  }
+}
 
 template <typename T>
-  void LinkedList<T>::push_back(T value) {
-    Node* new_tail = new Node{value, nullptr, tail_};
+void LinkedList<T>::push_back(T value) {
+  Node* new_tail = new Node{value, nullptr, tail_};
 
-    if (tail_ != nullptr) {
-      tail_->next = new_tail;
-    }
-    tail_ = new_tail;
-    if (empty()) {
-      head_ = tail_;
-    }
+  if (tail_ != nullptr) {
+    tail_->next = new_tail;
   }
+  tail_ = new_tail;
+  if (empty()) {
+    head_ = tail_;
+  }
+}
 template <typename T>
-  T LinkedList<T>::pop_front() {
-    if (empty()) {
-      return;
-    }  // best practice on what to return here?
+T LinkedList<T>::pop_front() {
+  if (empty()) {
+    return;
+  }  // best practice on what to return here?
 
-    Node* popped_node = head_;
-    T tmp = popped_node->value;
+  Node* popped_node = head_;
+  T tmp = popped_node->value;
 
-    if (popped_node->next == nullptr) {
-      assert(popped_node->previous == nullptr);
-      head_ = tail_ = nullptr;
-    } else {
-      head_ = head_->next;
-      head_->previous = nullptr;
-    }
-    delete popped_node;
-    return tmp;
+  if (popped_node->next == nullptr) {
+    assert(popped_node->previous == nullptr);
+    head_ = tail_ = nullptr;
+  } else {
+    head_ = head_->next;
+    head_->previous = nullptr;
   }
+  delete popped_node;
+  return tmp;
+}
 
 template <typename T>
 T LinkedList<T>::pop_back() {
-    if (empty()) {
-      return;
-    }  // empty case
+  if (empty()) {
+    return;
+  }  // empty case
 
-    Node* popped_node = tail_;
-    T tmp = popped_node->value;
+  Node* popped_node = tail_;
+  T tmp = popped_node->value;
 
-    if (popped_node->previous == nullptr) {  // single node case
-      head_ = tail_ = nullptr;
-    } else {  // multiple node case
-      tail_ = tail_->previous;
-      tail_->next = nullptr;
-    }
-    delete popped_node;
-    return tmp;
+  if (popped_node->previous == nullptr) {  // single node case
+    head_ = tail_ = nullptr;
+  } else {  // multiple node case
+    tail_ = tail_->previous;
+    tail_->next = nullptr;
   }
+  delete popped_node;
+  return tmp;
+}
 
 template <typename T>
 void LinkedList<T>::insert(T value, std::size_t index) {
-    if (index == 0) {  // front case
-      push_front(value);
-      return;
-    }
-
-    Node* target = node_at(index);
-
-    if (target == nullptr) {  // back case
-      push_back(value);
-      return;
-    }
-
-    Node* new_node = new Node{value, target, target->previous};
-    target->previous->next = new_node;
-    target->previous = new_node;
+  if (index == 0) {  // front case
+    push_front(value);
+    return;
   }
+
+  Node* target = node_at(index);
+
+  if (target == nullptr) {  // back case
+    push_back(value);
+    return;
+  }
+
+  Node* new_node = new Node{value, target, target->previous};
+  target->previous->next = new_node;
+  target->previous = new_node;
+}
 
 template <typename T>
 void LinkedList<T>::remove(std::size_t index) {
-    if (index == 0) {
-      pop_front();
-      return;
-    }
-
-    Node* target = node_at(index);
-
-    if (target == nullptr) {
-      throw std::out_of_range("index out of bounds");
-    } else if (target->next == nullptr) {
-      pop_back();
-      return;
-    }
-
-    target->previous->next = target->next;
-    target->next->previous = target->previous;
-
-    delete target;
+  if (index == 0) {
+    pop_front();
+    return;
   }
+
+  Node* target = node_at(index);
+
+  if (target == nullptr) {
+    throw std::out_of_range("index out of bounds");
+  } else if (target->next == nullptr) {
+    pop_back();
+    return;
+  }
+
+  target->previous->next = target->next;
+  target->next->previous = target->previous;
+
+  delete target;
+}
 
 template <typename T>
 bool LinkedList<T>::contains(T value) const {
-    Node* current = head_;
+  Node* current = head_;
 
-    while (current != nullptr) {
-      if (current->value == value) {
-        return true;
-      }
-      current = current->next;
+  while (current != nullptr) {
+    if (current->value == value) {
+      return true;
     }
-
-    return false;
+    current = current->next;
   }
 
-  template <typename T>
-  typename LinkedList<T>::Node* LinkedList<T>::node_at(std::size_t index) const {
-    Node* current = head_;
+  return false;
+}
 
-    for (std::size_t counter; counter < index; ++counter) {
-      if (current == nullptr) {
-        return nullptr;
-      }
-      current = current->next;
+template <typename T>
+typename LinkedList<T>::Node* LinkedList<T>::node_at(std::size_t index) const {
+  Node* current = head_;
+
+  for (std::size_t counter; counter < index; ++counter) {
+    if (current == nullptr) {
+      return nullptr;
     }
-
-    return current;
+    current = current->next;
   }
+
+  return current;
+}
 
 template <typename T>
 void LinkedList<T>::copy_from(const LinkedList& original) {
-	for (Node* current = original.head_; current != nullptr; current = current->next) {
-		push_back(current->value);
-	}
+  for (Node* current = original.head_; current != nullptr;
+       current = current->next) {
+    push_back(current->value);
+  }
 }
 
 }  // namespace dsc
