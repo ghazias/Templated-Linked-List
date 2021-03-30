@@ -86,20 +86,20 @@ LinkedList<T>& LinkedList<T>::operator=(LinkedList<T>&& other) {
 }  // move assignment
 
 template <typename T>
-  bool LinkedList<T>::operator==(const LinkedList& rhs) const {
-    for (Node *lhs_current = head_, rhs_current = rhs.head_;
-         lhs_current != nullptr;
-         lhs_current = lhs_current->next, rhs_current = rhs_current->next) {
-      if (rhs_current == nullptr) {
-        return false;
-      }
-
-      if (lhs_current->value != rhs_current->value) {
-        return false;
-      }
+bool LinkedList<T>::operator==(const LinkedList& rhs) const {
+  for (Node *lhs_current = head_, rhs_current = rhs.head_;
+       lhs_current != nullptr;
+       lhs_current = lhs_current->next, rhs_current = rhs_current->next) {
+    if (rhs_current == nullptr) {
+      return false;
     }
-    return true;
+
+    if (lhs_current->value != rhs_current->value) {
+      return false;
+    }
   }
+  return true;
+}
 
 template <typename T>
 std::size_t LinkedList<T>::size() const {
@@ -114,12 +114,9 @@ template <typename T>
 T& LinkedList<T>::at(std::size_t index) {
   Node* target = node_at(index);
   if (target == nullptr) {
-    throw std::out_of_range("OOB");
-    // std::ostringstream msg;
-    // msg << "Index " + index + " out of bounds in array of size " + size();
-    // maybe add size_ data member and update member functions to adjust?
-    // throw std::out_of_range(std::string result =
-    //                            msg.str(););  // TODO sstream ver
+    std::ostringstream msg;
+    msg << "Index " << index << " out of bounds in array of size " << size();
+    throw std::out_of_range(std::string result = msg.str(););
   }
 
   return target->value;
@@ -129,12 +126,9 @@ template <typename T>
 const T& LinkedList<T>::at(std::size_t index) const {
   Node* target = node_at(index);
   if (target == nullptr) {
-    throw std::out_of_range("OOB");
-    // std::ostringstream msg;
-    // msg << "Index " + index + " out of bounds in array of size " + size();
-    // maybe add size_ data member and update member functions to adjust?
-    // throw std::out_of_range(std::string result =
-    //                            msg.str(););  // TODO sstream ver
+    std::ostringstream msg;
+    msg << "Index " << index << " out of bounds in array of size " << size();
+    throw std::out_of_range(std::string result = msg.str(););
   }
 
   return target->value;
@@ -168,8 +162,8 @@ void LinkedList<T>::push_back(T value) {
 template <typename T>
 T LinkedList<T>::pop_front() {
   if (empty()) {
-    return;
-  }  // best practice on what to return here?
+    throw std::out_of_range("List is empty");
+  }
 
   Node* popped_node = head_;
   T tmp = popped_node->value;
@@ -188,7 +182,7 @@ T LinkedList<T>::pop_front() {
 template <typename T>
 T LinkedList<T>::pop_back() {
   if (empty()) {
-    return;
+    throw std::out_of_range("List is empty");
   }  // empty case
 
   Node* popped_node = tail_;
@@ -248,12 +242,8 @@ void LinkedList<T>::remove(std::size_t index) {
 template <typename T>
 bool LinkedList<T>::contains(T value) const {
   Node* current = head_;
-
-  while (current != nullptr) {
-    if (current->value == value) {
-      return true;
-    }
-    current = current->next;
+  for (Node* current = head_; current != nullptr; current = current->next) {
+    current->value == value ? return true : current = current->next;
   }
 
   return false;

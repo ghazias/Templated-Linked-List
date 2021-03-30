@@ -17,13 +17,13 @@ TEST_CASE("Copy constructor") {
   source.push_back('f');
 
   dsc::LinkedList<char> copy(source);
-  SECTION(" is deep copy") {
+  SECTION("is deep copy") {
     for (size_t i = 0; i < 3; i++) {
       REQUIRE(&copy.at(i) != &source.at(i));
     }
   }
 
-  SECTION(" has correct values") {
+  SECTION("has correct values") {
     for (std::size_t i = 0; i < 3; ++i) {
       REQUIRE(copy.at(i) == source.at(i));
     }
@@ -39,7 +39,7 @@ TEST_CASE("Move constructor") {
   char* addresses[] = {&source.at(0), &source.at(1), &source.at(2)};
   dsc::LinkedList<char> moved(std::move(source));
 
-  SECTION(" has correct values") {
+  SECTION("has correct values") {
     REQUIRE(moved.at(0) == 'c');
     REQUIRE(moved.at(1) == 'b');
     REQUIRE(moved.at(2) == 'a');
@@ -54,8 +54,10 @@ TEST_CASE("Move constructor") {
     REQUIRE(moved.at(0) == 'd');
   }
 
-  SECTION(" values have not moved in memory") {
-    for (std::size_t i = 0; i < 3; ++i) REQUIRE(&moved.at(i) == addresses[i]);
+  SECTION("values have not moved in memory") {
+    for (std::size_t i = 0; i < 3; ++i) {
+      REQUIRE(&moved.at(i) == addresses[i]);
+    }
   }
 }
 
@@ -197,9 +199,10 @@ TEST_CASE("push_front() stress test") {
   }
 }
 
-TEST_CASE("push back() cases") {
+TEST_CASE("push back() cases"){
   // same as push_front()
-}
+                               dsc::LinkedList < std::vector<>>
+                               }
 
 TEST_CASE("push_back() stress test") {}
 
