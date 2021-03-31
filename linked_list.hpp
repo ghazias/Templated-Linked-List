@@ -256,7 +256,7 @@ template <typename T>
 typename LinkedList<T>::Node* LinkedList<T>::node_at(std::size_t index) const {
   Node* current = head_;
 
-  for (std::size_t counter; counter < index; ++counter) {
+  for (std::size_t counter = 0; counter < index; ++counter) {
     if (current == nullptr) {
       return nullptr;
     }
