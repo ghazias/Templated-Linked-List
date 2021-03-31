@@ -241,9 +241,12 @@ void LinkedList<T>::remove(std::size_t index) {
 
 template <typename T>
 bool LinkedList<T>::contains(T value) const {
-  Node* current = head_;
   for (Node* current = head_; current != nullptr; current = current->next) {
-    current->value == value ? return true : current = current->next;
+    if (current->value == value) {
+      return true;
+    }
+
+    current = current->next;
   }
 
   return false;

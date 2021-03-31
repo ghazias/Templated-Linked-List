@@ -68,11 +68,11 @@ TEST_CASE("Nonempty copy assignment") {
   source.push_back(61);
   source.push_back(62);
 
-  int* addresses[] = {&source.at(0), &source.at(1), &source.at(2)};
+  std::vector<int*> addresses = {&source.at(0), &source.at(1), &source.at(2)};
 
   SECTION("Empty =") {
     dsc::LinkedList<int> copy = source;
-    for (std::size_t i = 0; i < 3; ++i) {
+    for (std::size_t i = 0; i < addresses.size(); ++i) {
       REQUIRE(copy.at(i) == source.at(i));
       REQUIRE(&copy.at(i) != addresses[i]);
     }
@@ -86,7 +86,7 @@ TEST_CASE("Nonempty copy assignment") {
 
     copy = source;
 
-    for (std::size_t i = 0; i < 3; ++i) {
+    for (std::size_t i = 0; i < addresses.size(); ++i) {
       REQUIRE(copy.at(i) == source.at(i));
       REQUIRE(&copy.at(i) != addresses[i]);
     }
@@ -123,15 +123,54 @@ TEST_CASE("Empty copy assignment") {
 }
 
 TEST_CASE("== operator") {
-  // == on equal list
-  // == on non-equals list
+  dsc::LinkedList<std::size_t> list;
+  dsc::LinkedList<std::size_t> list2;
+  SECTION("Equal") {
+    for (std::size_t i = 15; i < 20; ++i) {  // I know the magic numbers are bad
+      list.push_back(i);                     // but I don't want to call .size()
+      list2.push_back(i);
+    }
+
+    REQUIRE(list == list2);
+  }
+
+  SECTION("Nonequals") {
+    for (std::size_t i = 0; i < 5; ++i) {
+      list.push_back(i + 10);
+      list2.push_back(i);
+    }
+
+    REQUIRE(list != list2);
+  }
 }
 
-TEST_CASE("Move assignment ") {}
+// TODO complete this
+TEST_CASE("Move assignment") {
+  dsc::LinkedList<char> source;
+  source.push_back('H');
+  source.push_back('A');
+  source.push_back('j');
+  source.push_back('j');
 
-TEST_CASE("size() of empty list") {}
+  SECTION("Empty =") {}
+}
 
-TEST_CASE("size() of nonempty list") {}
+TEST_CASE("size() of empty list") {
+  dsc::LinkedList<int> empylist;
+
+  REQUIRE(empylist.empty());
+}
+
+TEST_CASE("size() of nonempty list") {
+  dsc::LinkedList<char> nonemptylist;
+
+  nonemptylist.push_back('b');
+  nonemptylist.push_back('a');
+  nonemptylist.push_front('v');
+  nonemptylist.push_front('t');
+
+  REQUIRE_FALSE(nonemptylist.empty());
+}
 
 TEST_CASE("empty() of empty list") {
   dsc::LinkedList<long> empty;
@@ -150,7 +189,7 @@ TEST_CASE("at()") {
   list.push_back("ipsum");
   list.push_back("dolor");
 
-  std::string* addresses[] = {&list.at(0), &list.at(1), &list.at(2)};
+  std::vector<std::string*> addresses = {&list.at(0), &list.at(1), &list.at(2)};
 
   SECTION("const version returns correct values") {
     REQUIRE(list.at(2) == "lorem");
@@ -187,7 +226,6 @@ TEST_CASE("push_front() cases") {
 }
 
 TEST_CASE("push_front() stress test") {
-  constexpr std::size_t N = 2000;
   dsc::LinkedList<std::size_t> list;
 
   for (std::size_t i = 0; i < N; ++i) {
@@ -199,19 +237,55 @@ TEST_CASE("push_front() stress test") {
   }
 }
 
-TEST_CASE("push back() cases"){
-  // same as push_front()
-                               dsc::LinkedList < std::vector<>>
-                               }
+TEST_CASE("push_back() cases") {
+  dsc::LinkedList<int> list;
 
-TEST_CASE("push_back() stress test") {}
+  list.push_back(6);  // empty list push
+  REQUIRE(list.at(0) == 6);
+
+  list.push_back(19);  // single list push
+  REQUIRE(list.at(0) == 6);
+  REQUIRE(list.at(1) == 19);
+
+  list.push_back(44);  // multiple element list push
+  REQUIRE(list.at(0) == 6);
+  REQUIRE(list.at(1) == 19);
+  REQUIRE(list.at(2) == 44);
+}
+
+TEST_CASE("push_back() stress test") {
+  dsc::LinkedList<std::size_t> list;
+
+  for (std::size_t i = 0; i < N; ++i) {
+    list.push_front(i);
+  }
+
+  for (std::size_t i = 0; i < N; ++i) {
+    REQUIRE(list.at(i) == i);
+  }
+}
 
 TEST_CASE("pop_front() cases") {
+  dsc::LinkedList<int> list;
+  list.push_back(33);
+  list.push_back(6);
+  //list.push_back();
   // empty list pop
+
   // single element pop
   // multiple elements pop
 }
-TEST_CASE("pop_back() stress test") {}
+TEST_CASE("pop_back() stress test") {
+    dsc::LinkedList<std::size_t> list;
+
+  for (std::size_t i = 0; i < N; ++i) {
+    list.push_front(i);
+  }
+
+  for (std::size_t i = 0; i < N; ++i) {
+    REQUIRE(list.pop_back() == i);
+  }
+}
 TEST_CASE("insert() cases") {
   // empty list insert
   // insert at end
@@ -219,18 +293,68 @@ TEST_CASE("insert() cases") {
   // invalid insert
 }
 
-TEST_CASE("insert stress test") {}
+TEST_CASE("insert stress test") {
+  dsc::LinkedList<std::size_t> list;
 
-TEST_CASE("remove()") {
-  // remove single element
-  // remove middle element
-  // remove last element
-  // invalid remove
+  for (std::size_t i = 0; i < N; ++i) {
+    list.insert(i, i);
+  }
+
+  for (std::size_t i = 0; i < N; ++i) {
+    REQUIRE(list.at(i) == i);
+  }
 }
 
-TEST_CASE("remove() stress test") {}
+TEST_CASE("remove()") {
+  dsc::LinkedList<int> list;
+  list.push_back(32);
+
+  SECTION("Removing single element") {
+    list.remove(0);
+
+    REQUIRE(list.empty());
+  }
+
+  list.push_back(-550);
+  SECTION("Removing last element") {
+    list.remove(1);
+
+    REQUIRE(list.size() == 1);
+    REQUIRE_THROWS(list.at(1));  // probably not a great way to test this?
+  }
+
+  SECTION("Removing middle element") {
+    list.push_back(13);
+    list.remove(1);
+
+    REQUIRE(list.at(1) == 13);
+  }
+
+  SECTION("Invalid remove") { REQUIRE_THROWS(list.remove(44)); }
+}
+
+TEST_CASE("remove() stress test") {
+  dsc::LinkedList<std::size_t> list;
+
+  for (std::size_t i = 0; i < N; ++i) {
+    list.push_back(i);
+  }
+
+  REQUIRE_FALSE(list.empty());
+
+  for (std::size_t i = 0; i < N; ++i) {
+    list.remove(i);
+  }
+
+  REQUIRE(list.empty());
+}
 
 TEST_CASE("contains()") {
-  // valid contains
-  // invalid contains
+  dsc::LinkedList<int> list;
+  list.insert(8000, 0);
+  list.push_back(65);
+  list.push_back(666);
+
+  REQUIRE(list.contains(65));       // valid contains
+  REQUIRE_FALSE(list.contains(6));  // invalid contains
 }
