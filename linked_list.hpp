@@ -87,7 +87,7 @@ LinkedList<T>& LinkedList<T>::operator=(LinkedList<T>&& other) {
 
 template <typename T>
 bool LinkedList<T>::operator==(const LinkedList& rhs) const {
-  for (Node *lhs_current = head_, rhs_current = rhs.head_;
+  for (Node *lhs_current = head_, *rhs_current = rhs.head_;
        lhs_current != nullptr;
        lhs_current = lhs_current->next, rhs_current = rhs_current->next) {
     if (rhs_current == nullptr) {
