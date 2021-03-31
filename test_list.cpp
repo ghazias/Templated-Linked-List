@@ -191,9 +191,9 @@ TEST_CASE("at()") {
   std::vector<std::string*> addresses = {&list.at(0), &list.at(1), &list.at(2)};
 
   SECTION("const version returns correct values") {
-    REQUIRE(list.at(2) == "lorem");
+    REQUIRE(list.at(0) == "lorem");
     REQUIRE(list.at(1) == "ipsum");
-    REQUIRE(list.at(0) == "dolor");
+    REQUIRE(list.at(2) == "dolor");
   }
 
   SECTION("Non-const version allows for value changes") {
