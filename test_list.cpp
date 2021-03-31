@@ -340,9 +340,10 @@ TEST_CASE("remove() stress test") {
   }
 
   REQUIRE_FALSE(list.empty());
-
-  for (std::size_t i = 0; i < N; ++i) {
-    list.remove(i);
+  SECTION("Remove from the front") {
+    for (std::size_t i = 0; i < N; ++i) {
+      list.remove(0);
+    }
   }
 
   REQUIRE(list.empty());
@@ -350,7 +351,7 @@ TEST_CASE("remove() stress test") {
 
 TEST_CASE("contains()") {
   dsc::LinkedList<int> list;
-  list.insert(8000, 0);
+  list.push_back(8000);
   list.push_back(65);
   list.push_back(666);
 
