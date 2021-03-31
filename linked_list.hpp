@@ -258,8 +258,6 @@ bool LinkedList<T>::contains(T value) const {
     if (current->value == value) {
       return true;
     }
-
-    current = current->next;
   }
 
   return false;
