@@ -116,7 +116,7 @@ bool LinkedList<T>::operator==(const LinkedList& rhs) const {
 
 template <typename T>
 std::size_t LinkedList<T>::size() const {
-  int counter = 0;
+  std::size_t counter = 0;
   for (Node* current = head_; current != nullptr; current = current->next) {
     ++counter;
   }
@@ -153,11 +153,11 @@ void LinkedList<T>::push_front(T value) {
 
   if (head_ != nullptr) {
     head_->previous = new_head;
+  } else {
+    assert(tail_ == nullptr);
+    tail_ = new_head;
   }
-  tail_ = new_head;
-  if (empty()) {
-    head_ = tail_;
-  }
+  head_ = new_head;
 }
 
 template <typename T>
@@ -166,11 +166,11 @@ void LinkedList<T>::push_back(T value) {
 
   if (tail_ != nullptr) {
     tail_->next = new_tail;
+  } else {
+    assert(head_ == nullptr);
+    head_ = new_tail;
   }
   tail_ = new_tail;
-  if (empty()) {
-    head_ = tail_;
-  }
 }
 template <typename T>
 T LinkedList<T>::pop_front() {
