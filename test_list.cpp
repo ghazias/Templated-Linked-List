@@ -256,7 +256,7 @@ TEST_CASE("push_back() stress test") {
   dsc::LinkedList<std::size_t> list;
 
   for (std::size_t i = 0; i < N; ++i) {
-    list.push_front(i);
+    list.push_back(i);
   }
 
   for (std::size_t i = 0; i < N; ++i) {
