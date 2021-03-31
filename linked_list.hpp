@@ -116,7 +116,7 @@ T& LinkedList<T>::at(std::size_t index) {
   if (target == nullptr) {
     std::ostringstream msg;
     msg << "Index " << index << " out of bounds in array of size " << size();
-    throw std::out_of_range(std::string result = msg.str(););
+    throw std::out_of_range(msg.str());
   }
 
   return target->value;
@@ -128,7 +128,7 @@ const T& LinkedList<T>::at(std::size_t index) const {
   if (target == nullptr) {
     std::ostringstream msg;
     msg << "Index " << index << " out of bounds in array of size " << size();
-    throw std::out_of_range(std::string result = msg.str(););
+    throw std::out_of_range(msg.str());
   }
 
   return target->value;
