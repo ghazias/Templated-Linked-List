@@ -345,6 +345,11 @@ TEST_CASE("remove() stress test") {
       list.remove(0);
     }
   }
+  SECTION("Remove from the back") {
+    for (std::size_t i = 0; i < N; ++i) {
+      list.remove(N - i - 1);
+    }
+  }
 
   REQUIRE(list.empty());
 }
