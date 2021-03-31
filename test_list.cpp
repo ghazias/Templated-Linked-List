@@ -1,4 +1,3 @@
-#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "linked_list.hpp"
 #include "linked_list.hpp"  // include guard
@@ -269,14 +268,14 @@ TEST_CASE("pop_front() cases") {
   dsc::LinkedList<int> list;
   list.push_back(33);
   list.push_back(6);
-  //list.push_back();
+  // list.push_back();
   // empty list pop
 
   // single element pop
   // multiple elements pop
 }
 TEST_CASE("pop_back() stress test") {
-    dsc::LinkedList<std::size_t> list;
+  dsc::LinkedList<std::size_t> list;
 
   for (std::size_t i = 0; i < N; ++i) {
     list.push_front(i);

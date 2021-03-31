@@ -50,6 +50,19 @@ class LinkedList {
 };
 
 template <typename T>
+void LinkedList<T>::destroy() {
+  Node* current = head_;
+  while (current != nullptr) {
+    Node* next = current->next;
+    delete current;
+    current = next;
+  }
+
+  head_ = nullptr;
+  tail_ = nullptr;
+}
+
+template <typename T>
 LinkedList<T>::LinkedList(const LinkedList& original) {
   copy_from(original);
 }  // copy constructor
