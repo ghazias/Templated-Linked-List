@@ -1,5 +1,5 @@
 CXX = clang++
-CXXFLAGS = -Wall -Wextra -pedantic -g -std=c++17
+CXXFLAGS = -Wall -Wextra -Wno-self-assign-overloaded -pedantic -g -std=c++17
 LINK.o = $(LINK.cc)
 TEST_OBJS = test_main.o test_list.o
 
